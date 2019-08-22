@@ -165,6 +165,6 @@ def main():
     ass_cp = le_assinatura()
     textos = le_textos()
     resultado = avalia_textos(textos, ass_cp)
-    print(resultado)
+    print(f'O autor do texto {resultado} está infectado com COH-PIAH')
 
-    
+main()
