@@ -104,21 +104,38 @@ def complexidade_de_sentenca(texto):
     return (tamanho_da_frase + 1) / tamanho_da_sentenca
 
 def tamanho_medio_da_frase(texto):
-    lista = separa_palavras(texto)
-    palavras = len(lista)
-    soma_de_letras = 0
-    soma_das_frases = len(separa_frases(texto))
-    for palavra in lista:
-        soma_de_letras = soma_de_letras + len(palavra)
-    return soma_de_letras / soma_das_frases
+    sentencas = separa_sentencas(texto)
+    num_sentencas = 0
+    soma_car_sentencas = 0
+
+    frases = []
+    for i in range(len(sentencas)):
+        frase_aux = separa_frases(sentencas[i])
+        frases.append(frase_aux)
+        num_sentencas += 1
+        soma_car_sentencas = soma_car_sentencas + len(sentencas[i])
+
+    palavras = []
+    num_frases = 0
+    soma_car_frases = 0
+    for linha in range(len(frases)):
+        for coluna in range(len(frases[linha])):
+            palavras_aux = separa_palavras(frases[linha][coluna])
+            palavras.append(palavras_aux)
+            num_frases += 1
+            soma_car_frases += len(frases[linha][coluna])
+    return soma_car_frases / num_frases
 
 def compara_assinatura(as_a, as_b):
     '''IMPLEMENTAR. Essa funcao recebe duas assinaturas de texto e deve devolver o grau de similaridade nas assinaturas.'''
-    soma_a = sum(as_a)
-    soma_b = sum(as_b)
-    if soma_a > soma_b:
-        return (soma_a - soma_b)/ 6
-    return (soma_b - soma_a) / 6
+    soma = []
+    for textoa_b in range(0, len(as_a), 1):
+            if as_a[textoa_b] > as_b[textoa_b]:
+                soma.append((as_a[textoa_b] - as_b[textoa_b])/6)
+            else:
+                soma.append((as_b[textoa_b] - as_a[textoa_b])/6)
+    
+    return sum(soma)
    
 
 def calcula_assinatura(texto):
@@ -131,10 +148,23 @@ def calcula_assinatura(texto):
 
 def avalia_textos(textos, ass_cp):
     '''IMPLEMENTAR. Essa funcao recebe uma lista de textos e deve devolver o numero (1 a n) do texto com maior probabilidade de ter sido infectado por COH-PIAH.'''
-    resultado = []
-    texto1 = 0
+    lista_de_assinatura = []
+    lista_de_similaridade = []
     for texto in range(0, len(textos), 1):
-        resultado.append(calcula_assinatura(textos[texto]))
-    return resultado
+        lista_de_assinatura.append(calcula_assinatura(textos[texto]))
+    for texto in range(0, len(lista_de_assinatura), 1):
+        lista_de_similaridade.append(compara_assinatura(lista_de_assinatura[texto], ass_cp))
+    cohpiah = lista_de_similaridade[0]
+    for texto in range(0, len(lista_de_similaridade), 1):
+        if lista_de_similaridade[texto] < cohpiah:
+            cohpiah = texto + 1        
+    return cohpiah
 
             
+def main():
+    ass_cp = le_assinatura()
+    textos = le_textos()
+    resultado = avalia_textos(textos, ass_cp)
+    print(resultado)
+
+    
